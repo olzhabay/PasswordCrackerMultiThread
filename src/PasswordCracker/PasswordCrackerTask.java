@@ -78,9 +78,11 @@ public class PasswordCrackerTask implements Runnable {
     */
     private static void getNextCandidate(int[] candidateChars) {
         /** COMPLETE **/
-        int index = consts.getPasswordLength() - 1;
-        while (++candidateChars[index] % 36 == 0 && index >= 0) {
-            candidateChars[index--] = 0;
+        int reminder = 1;
+        for (int index = consts.getPasswordLength() - 1; index >= 0; index--) {
+            candidateChars[index] += reminder;
+            reminder = candidateChars[index] / 36;
+            candidateChars[index] %= 36;
         }
     }
 
