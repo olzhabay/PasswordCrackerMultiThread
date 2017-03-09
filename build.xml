@@ -1,0 +1,57 @@
+<project name="PasswordCrackerMultiThread" basedir="." default="main">
+    <property name="src.dir"        value="src"/>
+    <property name="build.dir"      value="build"/>
+    <property name="classes.dir"    value="${build.dir}/classes"/>
+    <property name="jar.dir"        value="${build.dir}/jar"/>
+    <property name="test.build.dir" value="${build.dir}/test"/>
+    <property name="test.src.dir"   value="test"/>
+
+    <property name="main-class"     value="PasswordCracker.PasswordCrackerMain"/>
+
+    <path id="classpath.test">
+        <pathelement location="lib/junit-4.7.jar"/>
+        <pathelement location="${classes.dir}"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
+    </target>
+
+    <target name="test-compile" depends="compile">
+        <mkdir dir="${test.build.dir}"/>
+        <javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
+            <classpath refid="classpath.test"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="test-compile">
+        <junit printsummary="on" haltonerror="yes" fork="true">
+            <classpath>
+                <path refid="classpath.test"/>
+                <pathelement location="${test.build.dir}"/>
+            </classpath>
+            <formatter type="brief" usefile="false"/>
+            <batchtest>
+                <fileset dir="${test.src.dir}" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+     </target>
+
+     <target name="clean-build" depends="clean,jar"/>
+
+     <target name="main" depends="clean,jar"/>
+</project>
