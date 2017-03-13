@@ -17,15 +17,14 @@ public class PasswordCrackerMain {
         
         // If you want to know the ExecutorService,
         // refer to site; https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html
+        // init pool to the fixed number of threads available
         ExecutorService  workerPool = Executors.newFixedThreadPool(numThreads);
         PasswordFuture passwordFuture = new PasswordFuture();
         PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, passwordLength, encryptedPassword);
 
-		/*
-         * Create PasswordCrackerTask and use executor service to run in a separate thread
-		*/
+        // Create PasswordCrackerTask and use executor
+        // service to run in a separate thread
         for (int i = 0; i < numThreads; i++) {
-            /** COMPLETE **/
             workerPool.execute(new PasswordCrackerTask(i, isEarlyTermination, consts, passwordFuture));
         }
         System.out.println("20175324");
@@ -34,6 +33,7 @@ public class PasswordCrackerMain {
         System.out.println(isEarlyTermination);
         System.out.println(encryptedPassword);
         try {
+            // wait till cracked and get found password
             System.out.println(passwordFuture.get());
         } catch (Exception e) {
             e.printStackTrace();

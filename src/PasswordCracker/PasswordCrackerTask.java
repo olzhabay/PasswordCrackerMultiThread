@@ -32,14 +32,12 @@ public class PasswordCrackerTask implements Runnable {
      */
     @Override
     public void run() {
-        /** COMPLETE **/
         long rangeBegin = taskId * consts.getPasswordSubRangeSize();
         long rangeEnd = (taskId + 1) * consts.getPasswordSubRangeSize() - 1;
         String passwordOrNull = findPasswordInRange(rangeBegin, rangeEnd, consts.getEncryptedPassword());
         if (passwordOrNull != null) {
             passwordFuture.set(passwordOrNull);
         }
-        Thread.currentThread().stop();
     }
 
     /*	### findPasswordInRange	###
@@ -47,7 +45,6 @@ public class PasswordCrackerTask implements Runnable {
      * if a thread discovers the password, it returns original password string; otherwise, it returns null;
     */
     public String findPasswordInRange(long rangeBegin, long rangeEnd, String encryptedPassword) {
-        /** COMPLETE **/
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBase36(rangeBegin, passwordIterator);
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
@@ -67,7 +64,6 @@ public class PasswordCrackerTask implements Runnable {
      * If you don't understand, refer to the homework01 overview
     */
     protected static void transformDecToBase36(long numInDec, int[] numArrayInBase36) {
-        /** COMPLETE **/
         for (int index = consts.getPasswordLength()-1; index >= 0; index--) {
             numArrayInBase36[index] = (int) (numInDec % 36);
             numInDec = numInDec / 36;
@@ -78,7 +74,6 @@ public class PasswordCrackerTask implements Runnable {
      * The getNextCandidate update the possible password represented by 36 base system
     */
     private static void getNextCandidate(int[] candidateChars) {
-        /** COMPLETE **/
         int reminder = 1;
         for (int index = consts.getPasswordLength() - 1; index >= 0; index--) {
             candidateChars[index] += reminder;

@@ -35,12 +35,14 @@ class PasswordFuture implements Future<String> {
      *  set the result and send signal to thread waiting for the result
      */
     public void set(String result) {
-        /** COMPLETE **/
+        // acquiring lock
         lock.lock();
         try {
             this.result = result;
+            // signal for condition var
             resultSet.signal();
         } finally {
+            // release lock
             lock.unlock();
         }
     }
@@ -51,15 +53,16 @@ class PasswordFuture implements Future<String> {
      */
     @Override
     public String get() {
-        /** COMPLETE **/
+        // setting condition var to wait and
+        // release unlock until signaled
         lock.lock();
         try {
-            while (!isDone()) {
-                resultSet.await();
-            }
+            resultSet.await();
         } catch (InterruptedException e) {
+            // print exception failure
             e.printStackTrace();
         } finally {
+            // release lock
             lock.unlock();
         }
         return result;
@@ -69,7 +72,6 @@ class PasswordFuture implements Future<String> {
      */
     @Override
     public boolean isDone() {
-        /** COMPLETE **/
         return result != null;
     }
 
