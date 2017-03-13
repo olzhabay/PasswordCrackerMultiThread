@@ -39,7 +39,7 @@ public class PasswordCrackerTask implements Runnable {
         if (passwordOrNull != null) {
             passwordFuture.set(passwordOrNull);
         }
-
+        Thread.currentThread().stop();
     }
 
     /*	### findPasswordInRange	###
@@ -51,6 +51,7 @@ public class PasswordCrackerTask implements Runnable {
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBase36(rangeBegin, passwordIterator);
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
+            if (isEarlyTermination && passwordFuture.isDone()) return null;
             String password = transformIntToStr(passwordIterator);
             String hashedPassword = encrypt(password, getMessageDigest());
             if (hashedPassword.equals(encryptedPassword)) {

@@ -34,13 +34,12 @@ public class PasswordCrackerMain {
         System.out.println(isEarlyTermination);
         System.out.println(encryptedPassword);
         try {
-            while (!passwordFuture.isDone()) {}
             System.out.println(passwordFuture.get());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             workerPool.shutdown();
-}
+        }
     }
 }
 

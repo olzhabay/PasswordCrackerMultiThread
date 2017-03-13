@@ -38,10 +38,8 @@ class PasswordFuture implements Future<String> {
         /** COMPLETE **/
         lock.lock();
         try {
-            synchronized (lock) {
-                this.result = result;
-                resultSet.signal();
-            }
+            this.result = result;
+            resultSet.signal();
         } finally {
             lock.unlock();
         }
@@ -54,14 +52,15 @@ class PasswordFuture implements Future<String> {
     @Override
     public String get() {
         /** COMPLETE **/
-        while (!isDone()) {
-            try {
-                synchronized (resultSet) {
-                    resultSet.await();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        lock.lock();
+        try {
+            while (!isDone()) {
+                resultSet.await();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
         }
         return result;
     }
